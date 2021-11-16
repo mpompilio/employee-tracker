@@ -1,7 +1,7 @@
 const db = require('./db/connection');
 const express = require('express');
 const inquirer = require("inquirer");
-const { DH_CHECK_P_NOT_PRIME } = require('constants');
+
 
 
 const PORT = process.env.PORT || 3001;
@@ -52,7 +52,7 @@ const startQuestions = () => {
         } else if (task === "Add Role"){
             addRole();
         } else if (task === "Update Employee Role"){
-            updateRole();
+            getEmployees();
         } else if (task === "View All Roles"){
             viewRoles();
         } else {
@@ -202,7 +202,7 @@ const addRole= () => {
         var query = `INSERT INTO roles SET ?`
 
         db.query(query, {title: answer.roleName,
-           department_id: answer.departmentID,
+           department_id: answer.departmentId,
            salary: answer.salary 
    
     }, function(err, res) {
@@ -216,3 +216,52 @@ const addRole= () => {
     })
 
 };
+
+const getEmployees = () => {
+    var query = `SELECT id, first_name, last_name FROM employees`
+
+    db.query(query, function(err, res) {
+        if(err){
+            console.log(err);
+        }
+        const employees = res.map(({ id, first_name, last_name}) => ({
+           value: id, name: `${first_name} ${last_name}`
+        }));
+
+        updateRole(employees);
+    })
+
+}
+
+const updateRole = (employees) => {
+
+
+    inquirer
+    .prompt([
+        {
+            type: "list",
+            name: "employeeChoice",
+            message: "Which employee would you like to update?",
+            choices: employees
+        },
+        {
+            type: "input",
+            name: "newRole",
+            message: "What role id would you like to give them?"
+        }
+    ])
+    .then(function (answer){
+        var query = `UPDATE employees SET role_id = ? where id = ?`
+
+        db.query(query, [answer.newRole, answer.employeeChoice
+    
+        ], function(err, res) {
+         if(err){
+             console.log(err);
+         }
+             console.table(res);
+ 
+             startQuestions();
+     })
+     })
+}
