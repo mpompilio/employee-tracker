@@ -31,9 +31,9 @@ const startQuestions = () => {
             "View All Roles",
             "View All Departments",
             "Add Employee",
-            "Remove Employee",
+            "Add Department",
+            "Add Role",
             "Update Employee Role",
-            "Update Employee Manager",
             "View All Roles",
             "Exit"
         ]
@@ -47,10 +47,12 @@ const startQuestions = () => {
             viewDepartents();
         } else if (task === "Add Employee"){
             addEmployee();
+        } else if (task === "Add Department"){
+            addDepartment();
+        } else if (task === "Add Role"){
+            addRole();
         } else if (task === "Update Employee Role"){
-            updateEmployeeRole();
-        } else if (task === "Update Employee Manager"){
-            updateEmployeeManager();
+            updateRole();
         } else if (task === "View All Roles"){
             viewRoles();
         } else {
@@ -137,6 +139,72 @@ const addEmployee = () => {
         role_id: answer.role,
         manager_id: answer.manager,
         
+    }, function(err, res) {
+        if(err){
+            console.log(err);
+        }
+            console.table(res);
+
+            startQuestions();
+    })
+    })
+
+};
+
+const addDepartment = () => {
+
+    inquirer
+    .prompt([{
+        type: "input",
+        name: "departmentName",
+        message: "Enter Department Name?"
+    }
+    ])
+
+    .then(function (answer) {
+        var query = `INSERT INTO departments SET ?`
+
+        db.query(query, {department_name: answer.departmentName
+   
+    }, function(err, res) {
+        if(err){
+            console.log(err);
+        }
+            console.table(res);
+
+            startQuestions();
+    })
+    })
+
+};
+
+const addRole= () => {
+
+    inquirer
+    .prompt([{
+        type: "input",
+        name: "roleName",
+        message: "Enter Role Name?"
+    },
+    {
+        type: "input",
+        name: "departmentId",
+        message: "Enter Department ID?"
+    },
+    {
+        type: "input",
+        name: "salary",
+        message: "Enter Salary?"
+    }
+    ])
+
+    .then(function (answer) {
+        var query = `INSERT INTO roles SET ?`
+
+        db.query(query, {title: answer.roleName,
+           department_id: answer.departmentID,
+           salary: answer.salary 
+   
     }, function(err, res) {
         if(err){
             console.log(err);
