@@ -11,14 +11,16 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-
+//connect to database
 db.connect(function (err){
     if(err){
         console.log(err);
     }
+    //starts application
     startQuestions();
 })
 
+// const to start application
 const startQuestions = () => {
 
      inquirer
@@ -62,7 +64,7 @@ const startQuestions = () => {
     })
 };
 
-
+//view all employees function
 const viewEmployees = () => {
     var query = 
     `SELECT * FROM employees`
@@ -77,6 +79,7 @@ const viewEmployees = () => {
     })
 };
 
+//view all roles function
 const viewRoles = () => {
     var query = 
     `SELECT * FROM roles`
@@ -91,6 +94,7 @@ const viewRoles = () => {
     })
 }
 
+//view all departments function
 const viewDepartents = () => {
     var query = 
     `SELECT * FROM departments`
@@ -105,7 +109,7 @@ const viewDepartents = () => {
     })
 }
 
-
+//this prompts to add employees
 const addEmployee = () => {
 
     inquirer
@@ -151,6 +155,7 @@ const addEmployee = () => {
 
 };
 
+//this adds departments
 const addDepartment = () => {
 
     inquirer
@@ -178,6 +183,7 @@ const addDepartment = () => {
 
 };
 
+//adds roles
 const addRole= () => {
 
     inquirer
@@ -217,6 +223,7 @@ const addRole= () => {
 
 };
 
+//this is used to get the employee list
 const getEmployees = () => {
     var query = `SELECT id, first_name, last_name FROM employees`
 
@@ -233,6 +240,7 @@ const getEmployees = () => {
 
 }
 
+//updates employees role
 const updateRole = (employees) => {
 
 
